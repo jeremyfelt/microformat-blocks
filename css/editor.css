@@ -5,6 +5,7 @@
 }
 
 .mfblocks-group-hint {
+	display: block;
 	font-size: .8rem;
 	color: #454545;
 	margin-left: -2rem;

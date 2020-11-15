@@ -39,23 +39,51 @@ registerBlockType( 'mfblocks/h-entry', {
 			source: 'html',
 			selector: '.p-name',
 		},
+		summary: {
+			type: 'string',
+			source: 'html',
+			selector: '.p-summary',
+		}
 	},
 
 	edit: ( { attributes, setAttributes, className } ) => {
-		const { has_title, has_summary, has_content, display_author, display_publish_date } = attributes;
+		const {
+			has_title,
+			has_summary,
+			has_content,
+			display_author,
+			display_publish_date,
+			title,
+			summary,
+		} = attributes;
 
 		return (
 			<Fragment>
 				<div className={ className }>
 					<span className="mfblocks-group-hint">h-entry</span>
 					{ has_title &&
+						<Fragment>
+							<span className="mfblocks-group-hint">p-name</span>
+							<RichText
+								identifier="h-entry-title"
+								tagName="h1"
+								value={ title }
+								onChange={ ( value ) => setAttributes( { title: value } ) }
+								placeholder={ __( 'Write an entry title…' ) }
+							/>
+						</Fragment>
+					}
+					{ has_summary &&
+					<Fragment>
+						<span className="mfblocks-group-hint">p-summary</span>
 						<RichText
-							identifier="content"
-							tagName="h1"
-							value={ attributes.title }
-							onChange={ ( value ) => setAttributes( { title: value } ) }
-							placeholder={ __( 'Write an entry title…' ) }
+							identifier="h-entry-summary"
+							tagName="p"
+							value={ summary }
+							onChange={ ( value ) => setAttributes( { summary: value } ) }
+							placeholder={ __( 'Write an entry summary…' ) }
 						/>
+					</Fragment>
 					}
 					{ has_content &&
 					<div className="e-content-wrapper">
@@ -99,12 +127,23 @@ registerBlockType( 'mfblocks/h-entry', {
 	},
 
 	save: ( { attributes, className } ) => {
-		const { has_title, has_summary, has_content, display_author, display_publish_date } = attributes;
+		const {
+			has_title,
+			has_summary,
+			has_content,
+			display_author,
+			display_publish_date,
+			title,
+			summary,
+		} = attributes;
 
 		return (
 			<article className={ classnames( className, 'h-entry' ) }>
 				{ has_title &&
-				<h1 className="p-name">{ attributes.title }</h1>
+				<h1 className="p-name">{ title }</h1>
+				}
+				{ has_summary &&
+				<p className="p-summary">{ summary }</p>
 				}
 				{ has_content &&
 				<div className={ classnames( className, 'e-content' ) }>
