@@ -11,7 +11,7 @@ import { ToggleControl, PanelBody } from '@wordpress/components';
 import classnames from 'classnames';
 
 registerBlockType( 'mfblocks/h-entry', {
-	title: 'H-Entry Group',
+	title: 'Content Entry (h-entry)',
 
 	attributes: {
 		has_title: {
@@ -34,6 +34,10 @@ registerBlockType( 'mfblocks/h-entry', {
 			type: 'boolean',
 			default: false,
 		},
+		display_permalink: {
+			type: 'boolean',
+			default: true,
+		},
 		title: {
 			type: 'string',
 			source: 'html',
@@ -53,6 +57,7 @@ registerBlockType( 'mfblocks/h-entry', {
 			has_content,
 			display_author,
 			display_publish_date,
+			display_permalink,
 			title,
 			summary,
 		} = attributes;
@@ -119,6 +124,11 @@ registerBlockType( 'mfblocks/h-entry', {
 							checked={ display_publish_date }
 							onChange={ () => setAttributes( { display_publish_date: ! display_publish_date } ) }
 						/>
+						<ToggleControl
+							label={ __( 'Display entry permalink' ) }
+							checked={ display_permalink }
+							onChange={ () => setAttributes( { display_permalink: ! display_permalink } ) }
+						/>
 					</PanelBody>
 				</InspectorControls>
 			</Fragment>
@@ -131,8 +141,6 @@ registerBlockType( 'mfblocks/h-entry', {
 			has_title,
 			has_summary,
 			has_content,
-			display_author,
-			display_publish_date,
 			title,
 			summary,
 		} = attributes;
