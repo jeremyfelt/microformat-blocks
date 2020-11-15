@@ -1,0 +1,17 @@
+{
+  "name": "microformat-blocks",
+  "version": "0.0.1",
+  "description": "Blocks with microformat compatible markup",
+  "main": "src/index.js",
+  "author": "jeremyfelt",
+  "license": "ISC",
+  "devDependencies": {
+    "@wordpress/scripts": "^12.5.0"
+  },
+  "scripts": {
+    "build": "wp-scripts build"
+  },
+  "dependencies": {
+    "classnames": "^2.2.6"
+  }
+}
