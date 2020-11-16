@@ -1,13 +1,31 @@
-import { registerBlockType } from '@wordpress/blocks';
-import { __ } from '@wordpress/i18n';
-import { Fragment } from '@wordpress/element';
+import {
+	registerBlockType
+} from '@wordpress/blocks';
+
+import {
+	__experimentalGetSettings
+} from '@wordpress/date';
+
+import {
+	__
+} from '@wordpress/i18n';
+
+import {
+	Fragment,
+} from '@wordpress/element';
+
 import {
 	InnerBlocks,
 	InspectorControls,
 	RichText
 } from '@wordpress/block-editor';
 
-import { ToggleControl, PanelBody } from '@wordpress/components';
+import {
+	ToggleControl,
+	PanelBody,
+	DateTimePicker,
+} from '@wordpress/components';
+
 import classnames from 'classnames';
 
 registerBlockType( 'mfblocks/h-entry', {
@@ -23,6 +41,10 @@ registerBlockType( 'mfblocks/h-entry', {
 			default: false,
 		},
 		has_content: {
+			type: 'boolean',
+			default: true,
+		},
+		has_publish_date: {
 			type: 'boolean',
 			default: true,
 		},
@@ -47,6 +69,9 @@ registerBlockType( 'mfblocks/h-entry', {
 			type: 'string',
 			source: 'html',
 			selector: '.p-summary',
+		},
+		entry_date: {
+			type: 'string',
 		}
 	},
 
@@ -55,12 +80,22 @@ registerBlockType( 'mfblocks/h-entry', {
 			has_title,
 			has_summary,
 			has_content,
+			has_publish_date,
 			display_author,
 			display_publish_date,
 			display_permalink,
 			title,
 			summary,
+			entry_date,
 		} = attributes;
+
+		const onUpdateDate = ( dateTime ) => {
+			const newDateTime = moment( dateTime ).format( 'YYYY-MM-DD HH:mm' );
+			setAttributes( { entry_date: newDateTime } );
+		};
+
+		const entry_date_display = moment( entry_date ).format( 'MMMM Do YYYY [at] h:mm:ss a' );
+		const entry_date_iso = moment( entry_date ).format();
 
 		return (
 			<Fragment>
@@ -91,10 +126,16 @@ registerBlockType( 'mfblocks/h-entry', {
 					</Fragment>
 					}
 					{ has_content &&
-					<div className="e-content-wrapper">
+					<Fragment>
 						<span className="mfblocks-group-hint">e-content</span>
 						<InnerBlocks />
-					</div>
+					</Fragment>
+					}
+					{ has_publish_date && display_publish_date &&
+					<Fragment>
+						<span className="mfblocks-group-hint">dt-published</span>
+						<time class="dt-published" datetime={ entry_date_iso }>{ entry_date_display }</time>
+					</Fragment>
 					}
 				</div>
 				<InspectorControls>
@@ -115,6 +156,11 @@ registerBlockType( 'mfblocks/h-entry', {
 							onChange={ () => setAttributes( { has_content: ! has_content } ) }
 						/>
 						<ToggleControl
+							label={ __( 'Include dt-published' ) }
+							checked={ has_publish_date }
+							onChange={ () => setAttributes( { has_publish_date: ! has_publish_date } ) }
+						/>
+						<ToggleControl
 							label={ __( 'Display author' ) }
 							checked={ display_author }
 							onChange={ () => setAttributes( { display_author: ! display_author } ) }
@@ -129,6 +175,13 @@ registerBlockType( 'mfblocks/h-entry', {
 							checked={ display_permalink }
 							onChange={ () => setAttributes( { display_permalink: ! display_permalink } ) }
 						/>
+						{ has_publish_date &&
+							<DateTimePicker
+								currentDate={ entry_date }
+								onChange={ ( val ) => onUpdateDate( val ) }
+								is12Hour={ true }
+							/>
+						}
 					</PanelBody>
 				</InspectorControls>
 			</Fragment>
@@ -141,9 +194,15 @@ registerBlockType( 'mfblocks/h-entry', {
 			has_title,
 			has_summary,
 			has_content,
+			has_publish_date,
 			title,
 			summary,
+			entry_date,
+			display_publish_date,
 		} = attributes;
+
+		const entry_date_display = moment( entry_date ).format( 'MMMM Do YYYY [at] h:mm:ss a' );
+		const entry_date_iso = moment( entry_date ).format();
 
 		return (
 			<article className={ classnames( className, 'h-entry' ) }>
@@ -157,6 +216,9 @@ registerBlockType( 'mfblocks/h-entry', {
 				<div className={ classnames( className, 'e-content' ) }>
 					<InnerBlocks.Content />
 				</div>
+				}
+				{ has_publish_date && display_publish_date &&
+				<time class="dt-published" datetime={ entry_date_iso }>{ entry_date_display }</time>
 				}
 			</article>
 		);
