@@ -1,9 +1,18 @@
 # Microformat Blocks for WordPress
 
-Very draft.
+Very draft. Will change.
 
-Currently:
-* `h-entry` group.
-* `e-content` group.
-* "Thought" pattern to implement a note with only `e-content`.
-* "Thought with title" pattern to implement a note with `p-name` and `e-content`.
+## Content Entry (h-entry) block
+
+This block implements an initial attempt at [proper h-entry markup](http://microformats.org/wiki/h-entry).
+
+Toggles are used to include:
+* `p-name`
+* `p-summary`
+* `e-content`
+* `dt-published`
+
+To implement next:
+* Author cards per entry.
+* Permalinks per entry.
+* Add `u-in-reply-to` in the style [described by reply-context](https://indieweb.org/reply-context).
